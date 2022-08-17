@@ -139,7 +139,7 @@ export function Footer() {
                         >
                             Stay
                         </button>
-                        <button
+                        {turn === 'player' && isCurrentPlayerTurn && <button
                             className="betting-option"
                             id={
                                 turn === 'player' &&
@@ -148,11 +148,11 @@ export function Footer() {
                                     ? "ready-to-start"
                                     : "not-ready"
                             }
-                            disabled={(!isGameStarted || !isCurrentPlayerTurn || lockedBet === 0) || ((turn === 'dealer' && dealerCount >= 17))}
+                            disabled={(!isGameStarted || !isCurrentPlayerTurn || lockedBet === 0)}
                             onClick={handleDouble}
                         >
                             Double
-                        </button>
+                        </button>}
                     </>
                 )}
 

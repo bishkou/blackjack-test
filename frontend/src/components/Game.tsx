@@ -59,7 +59,7 @@ import gameContext from "../gameContext";
 
 export function Game ({isDealersTurn, hideCard, dealersCards, playersCards, message}) {
 
-    const {isCurrentPlayerTurn, lockedBet, end, isGameStarted, didDouble} = useContext(gameContext);
+    const {isCurrentPlayerTurn, lockedBet, end, isGameStarted, didDouble, turn, hidePlayerCards, hideDealerCards} = useContext(gameContext);
 
     const whichImages = (who: string, cards: any[]) => {
         return cards.map((card) => {
@@ -246,6 +246,17 @@ export function Game ({isDealersTurn, hideCard, dealersCards, playersCards, mess
     };
 
 
+    const showFlippedCard = (cards) => {
+        return cards.map(card => {
+            return (
+                <img
+                    className="card-img"
+                    src={CardBack}
+                />
+            )
+        })
+    }
+
     return (
         <>
             {!end && isGameStarted && (isCurrentPlayerTurn? <p>IT'S YOUR TURN</p> : <p>WAITING FOR THE OTHER PLAYER TO PLAY</p>) }
@@ -254,10 +265,13 @@ export function Game ({isDealersTurn, hideCard, dealersCards, playersCards, mess
                 {isGameStarted && lockedBet > 0 && (
                     <>
                         <div className="dealers-cards-div">
-                            {whichImages("dealer", dealersCards)}
+                            {(!end && hideDealerCards ) ?
+                                showFlippedCard(dealersCards):
+                                whichImages("dealer", dealersCards)
+                            }
                         </div>
                         <div className={'chip-or-message'}>
-                            {end && <h1 className="result-message">{message}</h1>}
+                            {end && <h1 className="result-message">GAME OVER:  {message}</h1>}
                             <div className="empty-chip-container">
                                 <div className="locked-bet-amount">
                                     {lockedBet}
@@ -270,7 +284,11 @@ export function Game ({isDealersTurn, hideCard, dealersCards, playersCards, mess
 
                         </div>
                         <div className="players-cards-div">
-                            {whichImages("player", playersCards)}
+                            {(!end && hidePlayerCards) ?
+                                showFlippedCard(playersCards):
+                                whichImages("player", playersCards)
+
+                            }
                         </div>
                     </>
                 )}

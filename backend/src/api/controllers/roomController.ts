@@ -42,7 +42,9 @@ export class RoomController {
                     playersCards,
                     dealersCards,
                     isCurrentPlayerTurn: true,
-                    isDealerTurn: false
+                    isDealerTurn: false,
+                    hideDealerCards: true,
+                    hidePlayerCards: false
                 });
                 socket
                     .to(message.roomId)
@@ -52,7 +54,9 @@ export class RoomController {
                         playersCards,
                         dealersCards,
                         isCurrentPlayerTurn: false,
-                        isDealerTurn: true
+                        isDealerTurn: true,
+                        hideDealerCards: false,
+                        hidePlayerCards: true
                     });
             }
         }

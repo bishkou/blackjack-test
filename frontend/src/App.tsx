@@ -21,7 +21,9 @@ export interface IStartGame {
     playersCards: Array<string>,
     dealersCards: Array<string>,
     isCurrentPlayerTurn: boolean,
-    isDealerTurn: boolean
+    isDealerTurn: boolean,
+    hideDealerCards: boolean,
+    hidePlayerCards: boolean
 }
 
 function App () {
@@ -45,6 +47,9 @@ function App () {
     const [betAmount, setBetAmount] = useState(0);
     const [isInRoom, setInRoom] = useState(false);
     const [didDouble, setDidDouble] = useState(false);
+    const [hideDealerCards, setHideDealerCards] = useState(false)
+    const [hidePlayerCards, setHidePlayerCards] = useState(false)
+
 
 
     const gameContextValue: IGameContextProps = {
@@ -82,13 +87,17 @@ function App () {
         setChipCount,
         didDouble,
         setDidDouble,
+        hidePlayerCards,
+        setHidePlayerCards,
+        hideDealerCards,
+        setHideDealerCards
     }
 
 
     const audio = new Audio();
 
   const connectSocket= async () => {
-    const socket = socketService.connect('http://localhost:9001')
+    const socket = socketService.connect('http://localhost:8001')
         .catch((error) => {
           console.log('Error: ', error);
         })
@@ -108,10 +117,10 @@ function App () {
     }, [playersCards, dealersCards,dealerStayed]);
 
     useEffect(() => {
-        if(lockedBet > 0){
+        if(lockedBet > 0 && !isGameStarted){
             playSound(shuffleDeck);
-            checkGame();
         }
+        checkGame();
     }, [lockedBet])
 
     const playSound = (sound: any) => {
@@ -225,6 +234,8 @@ function App () {
                 setPlayersCards(options.playersCards)
                 setDealersCards(options.dealersCards)
                 setRandomizedDecks(options.newShuffle);
+                setHidePlayerCards(options.hidePlayerCards)
+                setHideDealerCards(options.hideDealerCards);
             })
 
         }
@@ -246,19 +257,19 @@ function App () {
         if (socketService.socket && lockedBet > 0) {
 
             if (dealerScore === playerScore && dealerStayed){
-                gameService.gameWin(socketService.socket, 'a TIE')
+                gameService.gameWin(socketService.socket, 'A TIE')
             } else if (dealerScore >= 21){
                 if (dealerScore === 21){
-                    gameService.gameWin(socketService.socket, 'Dealer WON')
+                    gameService.gameWin(socketService.socket, 'Dealer WON, BLACKJACK')
                 } else {
-                    gameService.gameWin(socketService.socket, 'Player Won')
+                    gameService.gameWin(socketService.socket, 'Player Won, DEALER BUSTED')
                 }
 
             } else if (playerScore >= 21){
                 if (playerScore === 21){
-                    gameService.gameWin(socketService.socket, 'Player WON')
+                    gameService.gameWin(socketService.socket, 'Player WON, BLACKJACK')
                 } else {
-                    gameService.gameWin(socketService.socket, 'Dealer Won')
+                    gameService.gameWin(socketService.socket, 'Dealer Won, PLAYER BUSTED')
                 }
 
             } else if (dealerScore >= 17 && dealerStayed) {

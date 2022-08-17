@@ -36,6 +36,11 @@ export interface IGameContextProps {
     setChipCount: (count: number) => void;
     didDouble: boolean;
     setDidDouble: (double: boolean) => void;
+    hideDealerCards: boolean,
+    setHideDealerCards: (hide: boolean) => void;
+    hidePlayerCards: boolean,
+    setHidePlayerCards: (hide: boolean) => void;
+
 
 }
 
@@ -73,7 +78,11 @@ const defaultState: IGameContextProps = {
     chipCount: 1000,
     setChipCount: () => {},
     didDouble: false,
-    setDidDouble: () => {}
+    setDidDouble: () => {},
+    hideDealerCards: false,
+    setHideDealerCards: () => {},
+    hidePlayerCards: false,
+    setHidePlayerCards: () => {}
 
 
 };
